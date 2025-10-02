@@ -31,6 +31,12 @@ const HelpContent = () => {
                 <ul className="help__listTab">
                     <Tab>
                         <div className="help__icon">
+                            <span className="DANE__Geovisor__icon__tutorial"></span>
+                        </div>
+                        <p className="help__text">Ayuda interactiva</p>
+                    </Tab>
+                    <Tab>
+                        <div className="help__icon">
                             <span className="DANE__Geovisor__icon__bookOpen"></span>
                         </div>
                         <p className="help__text">Guía Rápida</p>
@@ -52,6 +58,12 @@ const HelpContent = () => {
                 {/* LOS PANELS - TRAEN EL CONTENIDO DE CADA TAB SEGUN SU ORDEN */}
                 <Panel>
                     <div className="help__content">
+                        <img width="500" height="500" loading="lazy" className="help__content__item" rel="noreferrer" src="https://geoportal.dane.gov.co/descargas/videos/GIF_SIPSA_INSUMOS.gif" alt="Instrucciones de uso para geovisores del Geoportal DANE" target="_blank" />
+                    </div>
+                </Panel>
+
+                <Panel>
+                    <div className="help__content">
                         <img width="100" height="100" loading="lazy" className="help__content__item" rel="noreferrer" src="https://geoportal.dane.gov.co/descargas/ayudas/ayuda-geovisor-sipsa.webp" alt="Instrucciones de uso para geovisores del Geoportal DANE" target="_blank" />
                     </div>
                 </Panel>
@@ -59,7 +71,7 @@ const HelpContent = () => {
                 <Panel>
                     <div className="help__content" id="help__aboutUrl">
                         <p className="help__content__text" itemProp="description">
-                        Geovisor para la consulta y visualización de la información correspondiente a los resultados de la operación estadística SIPSA_I agregada por Insumos Agrícolas, Insumos Pecuarios y Factores asociados a la producción agropecuaria.
+                            Geovisor para la consulta y visualización de la información correspondiente a los resultados de la operación estadística SIPSA_I agregada por Insumos Agrícolas, Insumos Pecuarios y Factores asociados a la producción agropecuaria.
                             <br />
                             <a href="https://www.dane.gov.co/index.php/estadisticas-por-tema/precios-y-costos/sistema-de-informacion-de-precios-sipsa" target="_blank" className="help__listPanelLink">
                                 <div className="help__panelItem__icon1">
