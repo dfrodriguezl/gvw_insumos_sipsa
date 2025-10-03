@@ -4,7 +4,9 @@ import HelpContent from '../components/helpcontent';
  
   
 const Help = () => {
-  const [helpModal, toggleHelpModal] = useModali();
+  const [helpModal, toggleHelpModal] = useModali({
+    large: true
+  });
  
   return (
       <div>

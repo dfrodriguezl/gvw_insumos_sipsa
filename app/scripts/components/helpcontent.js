@@ -25,6 +25,30 @@ const HelpContent = () => {
     return (
         <Fragment>
             <div className="help__container" itemScope itemType="https://schema.org/GovernmentOrganization">
+                <h3 className="Header__container__geoportal">
+                    <a rel="noreferrer" title="Geoportal DANE Logo" href="https://geoportal.dane.gov.co/" target="_blank" className="Header__container__geoportal__link">
+                        <span className="DANE__Geovisor__icon__logoGeoportal">
+                            <span className="path1"></span>
+                            <span className="path2"></span>
+                            <span className="path3"></span>
+                            <span className="path4"></span>
+                            <span className="path5"></span>
+                            <span className="path6"></span>
+                            <span className="path7"></span>
+                            <span className="path8"></span>
+                            <span className="path9"></span>
+                            <span className="path10"></span>
+                            <span className="path11"></span>
+                            <span className="path12"></span>
+                            <span className="path13"></span>
+                            <span className="path14"></span>
+                            <span className="path15"></span>
+                            <span className="path16"></span>
+                            <span className="path17"></span>
+                            <span className="path18"></span>
+                        </span>
+                    </a>
+                </h3>
                 <h3 className="help__title" itemProp="name">{variables.title}</h3>
             </div>
             <Tabs state={state}>
@@ -33,7 +57,7 @@ const HelpContent = () => {
                         <div className="help__icon">
                             <span className="DANE__Geovisor__icon__tutorial"></span>
                         </div>
-                        <p className="help__text">Ayuda interactiva</p>
+                        <p className="help__text">Video</p>
                     </Tab>
                     <Tab>
                         <div className="help__icon">
