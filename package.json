@@ -79,10 +79,5 @@
     "glob-parent": "5.1.2",
     "prismjs": "1.27.0",
     "highlight.js": "10.4.1"
-  },
-  "overrides": {
-    "schema-utils@^4.0.0": {
-      "ajv-keywords": "5.1.0"
-    }
   }
 }
