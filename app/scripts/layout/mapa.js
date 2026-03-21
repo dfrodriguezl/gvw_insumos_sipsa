@@ -49,6 +49,15 @@ let max;
 let min;
 let max2;
 
+/** geostats exige nbClass < serie.length; evita alert en _classificationCheck */
+const getSafeJenksClassCount = (serieLength, desiredMax) => {
+  if (serieLength < 2) return 0;
+  return Math.min(desiredMax, serieLength - 1);
+};
+
+const jenksBoundsAreValid = (bounds) =>
+  bounds != null && Array.isArray(bounds) && !bounds.includes(undefined);
+
 const Mapa = () => {
 
   // const [hideVisualizationSwitch, setHideVisualizationSwitch] = useState("show");
@@ -863,9 +872,15 @@ variables.changeMap = function (nivel, dpto, table) {
 
     // LEYENDA NIVEL DPTO
     var serie = new geostats(list);
+    serie.silent = true;
     let dataUnidades = variables.tematica["CATEGORIAS"][variables.varVariable][0]["UNIDAD"];
 
-    if (serie.getClassJenks(5) != undefined) {
+    let kDpto = getSafeJenksClassCount(list.length, 5);
+    while (kDpto > 0 && !jenksBoundsAreValid(serie.getClassJenks(kDpto))) {
+      kDpto--;
+    }
+
+    if (kDpto > 0 && jenksBoundsAreValid(serie.bounds)) {
 
       for (let index = 0; index < (serie.ranges).length; index++) {
         let rangeSplit = serie.ranges[(serie.ranges).length - (index + 1)].split(" - ");
@@ -1197,57 +1212,31 @@ variables.changeMap = function (nivel, dpto, table) {
 
       let list = integrado.filter((x, i, a) => a.indexOf(x) == i)
 
-      // console.log(integrado)
-      // console.log("LIST", list)
-      const rangeNumber = list.length < 5 ? list.length : 5;
       var serie = new geostats(list);
-      console.log("LIST", list);
-      if (list.length > 3) {
-        let classes = 5;
+      serie.silent = true;
+      let classes = getSafeJenksClassCount(list.length, 5);
+      while (classes > 0 && !jenksBoundsAreValid(serie.getClassJenks(classes))) {
+        classes--;
+      }
 
-        if (list.length == 2) {
-          classes = 2;
-          if (serie.getClassJenks(classes).includes(undefined)) {
-            classes = 1;
+      if (classes > 0 && jenksBoundsAreValid(serie.bounds)) {
+        const visibleCount = Math.min(5, serie.ranges.length, classes);
+        for (let index = 0; index < (serie.ranges).length; index++) {
+          let rangeSplit = serie.ranges[(serie.ranges).length - (index + 1)].split(" - ");
+          let newRange = parseFloat(rangeSplit[0]).toLocaleString("de", "DE") + " - " + parseFloat(rangeSplit[1]).toLocaleString("de", "DE");
+          let rango = newRange + " (" + dataUnidades + ")";
+          if (index == 0) {
+            rango = rango.split("-")
+            rango = " > " + rango[0].trim() + " (" + dataUnidades + ")"
           }
-        } else {
-          if (serie.getClassJenks(classes).includes(undefined)) {
-            classes = 4;
-            if (serie.getClassJenks(classes).includes(undefined)) {
-              classes = 3;
-              if (serie.getClassJenks(classes).includes(undefined)) {
-                classes = 2;
-              }
-            }
-          }
-        }
 
-        if (serie.getClassJenks(classes) != undefined) {
-          for (let index = 0; index < (serie.ranges).length; index++) {
-            const searchRegExp = /\./g;
-            let rangeSplit = serie.ranges[(serie.ranges).length - (index + 1)].split(" - ");
-            // console.log("RANGO 1", rangeSplit)
-            let newRange = parseFloat(rangeSplit[0]).toLocaleString("de", "DE") + " - " + parseFloat(rangeSplit[1]).toLocaleString("de", "DE");
-            let rango = newRange + " (" + dataUnidades + ")";
-            // console.log("RANGO", rango)
-            // let rango = serie.ranges[(serie.ranges).length - (index + 1)].replace(searchRegExp, ",") + " (" + dataUnidades + ")"
-            if (index == 0) {
-              rango = rango.split("-")
-              rango = " > " + rango[0].trim() + " (" + dataUnidades + ")"
-            }
-
-            if (table == "y") {
-              variables.coloresLeyend[variables.varVariable]["MPIO"][index][2] = rango;
-            }
-
-            // variables.coloresLeyend[variables.varVariable]["MPIO"][index][2] = rango;
-
+          if (table == "y") {
+            variables.coloresLeyend[variables.varVariable]["MPIO"][index][2] = rango;
           }
         }
-
 
         variables.coloresLeyend[variables.varVariable]["MPIO"].map((color, idx) => {
-          if (idx >= rangeNumber) {
+          if (idx >= visibleCount) {
             variables.coloresLeyend[variables.varVariable]["MPIO"][idx][3] = "hidden";
           } else {
             variables.coloresLeyend[variables.varVariable]["MPIO"][idx][3] = "visible";
@@ -1262,13 +1251,13 @@ variables.changeMap = function (nivel, dpto, table) {
       integradoNeg.push(-0.1);
       let listPos = integradoPos.filter((x, i, a) => a.indexOf(x) == i);
       let listNeg = integradoNeg.filter((x, i, a) => a.indexOf(x) == i);
-      let rangeNumber = 2;
       let seriePos = new geostats(listPos);
-      let serieNeg = new geostats(listNeg);
-      if (seriePos.getClassJenks(rangeNumber).includes(undefined)) {
-        rangeNumber = 1
+      seriePos.silent = true;
+      let kPos = getSafeJenksClassCount(listPos.length, 2);
+      while (kPos > 0 && !jenksBoundsAreValid(seriePos.getClassJenks(kPos))) {
+        kPos--;
       }
-      if (seriePos.getClassJenks(rangeNumber) != undefined) {
+      if (kPos > 0 && jenksBoundsAreValid(seriePos.bounds)) {
         for (let index = 0; index < (seriePos.ranges).length; index++) {
           let rangeSplit = seriePos.ranges[(seriePos.ranges).length - (index + 1)].split(" - ");
           let newRange = parseFloat(rangeSplit[0]).toLocaleString("de", "DE") + " - " + parseFloat(rangeSplit[1]).toLocaleString("de", "DE");
@@ -1284,12 +1273,14 @@ variables.changeMap = function (nivel, dpto, table) {
       }
 
       variables.coloresLeyend[variables.varVariable]["MPIO"][2][2] = '0 ' + dataUnidades;
-      rangeNumber = 2;
-      if (serieNeg.getClassJenks(rangeNumber).includes(undefined)) {
-        rangeNumber = 1;
+      let serieNeg = new geostats(listNeg);
+      serieNeg.silent = true;
+      let kNeg = getSafeJenksClassCount(listNeg.length, 2);
+      while (kNeg > 0 && !jenksBoundsAreValid(serieNeg.getClassJenks(kNeg))) {
+        kNeg--;
       }
 
-      if (serieNeg.getClassJenks(rangeNumber) != undefined) {
+      if (kNeg > 0 && jenksBoundsAreValid(serieNeg.bounds)) {
         for (let index = 0; index < (serieNeg.ranges).length; index++) {
           let rangeSplit = serieNeg.ranges[(serieNeg.ranges).length - (index + 1)].split(" - ");
           let newRange = parseFloat(rangeSplit[1]).toLocaleString("de", "DE") + " - " + parseFloat(rangeSplit[0]).toLocaleString("de", "DE");
@@ -1573,8 +1564,12 @@ variables.changeMap = function (nivel, dpto, table) {
     // console.log(integrado)
     // console.log(list)
     var serie = new geostats(list);
-    // console.log(serie)
-    if (serie.getClassJenks(5) != undefined) {
+    serie.silent = true;
+    let kSecc = getSafeJenksClassCount(list.length, 5);
+    while (kSecc > 0 && !jenksBoundsAreValid(serie.getClassJenks(kSecc))) {
+      kSecc--;
+    }
+    if (kSecc > 0 && jenksBoundsAreValid(serie.bounds)) {
       for (let index = 0; index < (serie.ranges).length; index++) {
         const searchRegExp = /\./g;
         let rango = serie.ranges[(serie.ranges).length - (index + 1)].replace(searchRegExp, ",") + " (" + dataUnidades + ")"
