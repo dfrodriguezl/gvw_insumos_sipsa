@@ -1,4 +1,6 @@
 // Geovisor - OpenLayers | Variables Globales
+const googleMapsApiKey = 'AIzaSyAOha4Su8EqOFQfDE8NjrS_KdSHfu50WkA';
+
 export const variables = {
 
     title: 'Geovisor del Componente de Insumos y Factores Asociados a la Producción Agropecuaria (SIPSA_I)', //Cambielo por el título de su geovisor
@@ -30,12 +32,26 @@ export const variables = {
     // },
 
     baseMaps: {
-        'Gris': 'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-        'Noche': 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-        'OSM': 'https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}',
-        'Satelital': 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
+        'Gris': `google://roadmap/{z}/{x}/{y}?key=${googleMapsApiKey}`,
+        'Noche': `google://satellite/{z}/{x}/{y}?key=${googleMapsApiKey}&layerType=layerRoadmap`,
+        'OSM': `google://roadmap/{z}/{x}/{y}?key=${googleMapsApiKey}`,
+        'Satelital': `google://satellite/{z}/{x}/{y}?key=${googleMapsApiKey}&layerType=layerRoadmap`,
     },
-    baseMapCheck: "Noche",  // Ponga el MAPA BASE que quiere por defecto
+    baseMapsStyle: {
+        'Gris': {
+            'raster-saturation': -1,
+            'raster-contrast': -0.15,
+            'raster-brightness-min': 0.55,
+            'raster-brightness-max': 1,
+        },
+        'Noche': {
+            'raster-saturation': -1,
+            'raster-contrast': 0.45,
+            'raster-brightness-min': 0.05,
+            'raster-brightness-max': 0.45,
+        },
+    },
+    baseMapCheck: "Gris",  // Ponga el MAPA BASE que quiere por defecto
     layers: {
         departamentos: {
             tipo: "vt",  // Tipos vt: Vector Tile, wms, wfs

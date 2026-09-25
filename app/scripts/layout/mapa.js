@@ -8,7 +8,7 @@ import React, { Component, Fragment, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Overlay from 'ol/Overlay';
 import TileLayer from 'ol/layer/Tile';
-import XYZ from 'ol/source/XYZ';
+import { createBasemapSource } from '../util/basemapSource';
 import { defaults as defaultControls, Zoom, OverviewMap, ScaleLine } from 'ol/control.js';
 import { transform, transformExtent } from 'ol/proj';
 import StreetViewControl from '../olsv/ol_sv'
@@ -97,13 +97,8 @@ const Mapa = () => {
     }
   });
 
-  var key = variables.key;
-
   variables.base = new TileLayer({
-    source: new XYZ({
-      url: variables.baseMaps[variables.baseMapCheck] + key,
-      crossOrigin: "Anonymous"
-    })
+    source: createBasemapSource(variables.baseMapCheck)
   });
   // var overviewMapControl = new OverviewMap({
   //   className: 'map__overview',

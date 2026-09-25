@@ -73,6 +73,10 @@ const Search = ({ filterSearch, placeholder }) => {
     }
 
     variables.changeTheme = function (nivel, dpto, campo, table) {
+        const datosVariable = variables.dataArrayDatos[variables.varVariable.substring(0, 5)];
+        if (!datosVariable) {
+            return;
+        }
 
         if (nivel == "MNZN") {
             if (variables.dataArrayDatos[variables.varVariable.substring(0, 5)][nivel][dpto] != undefined) {

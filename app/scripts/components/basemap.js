@@ -1,6 +1,6 @@
 import React, { useState }  from 'react';
 import { variables } from '../base/variables';
-import XYZ from 'ol/source/XYZ';
+import { createBasemapSource } from '../util/basemapSource';
 import Gris from '../../img/gris.png';
 import Noche from '../../img/noche.png';
 import OSM from '../../img/OSM.png';
@@ -11,13 +11,9 @@ const BaseMap = () => {
   const [ checked, setChecked ] = useState(variables.baseMapCheck);
 
   function handleClick(e) {
+    if (!variables.base || e === variables.baseMapCheck) return;
     variables.baseMapCheck = e;
-    variables.base.setSource(
-      new XYZ({
-        url: variables.baseMaps[e] + variables.key,
-        crossOrigin: "Anonymous"
-      })
-    )
+    variables.base.setSource(createBasemapSource(e));
     setChecked(e);
   }
 
@@ -36,7 +32,7 @@ const BaseMap = () => {
           Object.keys(variables.baseMaps).map((values, index)=> {
             // console.log(values, index);
             return <li  key={'cajaBaseMap' + `${index+1}`} className="basemap__list__item" onClick={() => handleClick(values)}>
-                    <input type="radio" id={'switch' + `${index+1}`} name='radioBaseMap' value={values} defaultChecked={values == checked}/>
+                    <input type="radio" id={'switch' + `${index+1}`} name='radioBaseMap' value={values} checked={values === checked} onChange={() => handleClick(values)}/>
                     <label htmlFor={'switch' + `${index+1}`}>
                       <div key={'cajaBaseMap' + `${index+1}`} className="basemap__btn">
                         {values === 'Gris'?
