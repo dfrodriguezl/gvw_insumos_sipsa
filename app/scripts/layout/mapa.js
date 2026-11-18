@@ -1011,6 +1011,9 @@ variables.changeMap = function (nivel, dpto, table) {
 
   }
   else if (nivel == "MPIO") {
+    if (!variables.productoSeleccionado || !variables.periodoSeleccionado) {
+      return;
+    }
     let valor2Array = [];
 
     var integrado = Object.values(variables.dataArrayDatos[variables.varVariable.substring(0, 5)][nivel][variables.periodoSeleccionado.value]).map(function (a, b) {

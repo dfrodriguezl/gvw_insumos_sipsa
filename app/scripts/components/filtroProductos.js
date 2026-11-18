@@ -81,7 +81,7 @@ const FiltroProductos= () => {
   }
 
   variables.updateProductoSeleccionado = (producto) => {
-    //  onChangePeriodo(producto)
+    if (!producto) return;
     setProductoSeleccionado(producto);
     variables.productoSeleccionado = producto;
     variables.changeTheme("MPIO", 0, "MPIO", "y");
